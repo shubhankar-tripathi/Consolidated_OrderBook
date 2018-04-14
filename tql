@@ -1,0 +1,10 @@
+CREATE TABLE orderbook (
+  id INT NOT NULL AUTO_INCREMENT,
+  typ VARCHAR (45) NOT NULL,
+  price VARCHAR (45) NOT NULL,
+  count VARCHAR (45) NOT NULL,
+  amount VARCHAR (45) NOT NULL,
+  xchange VARCHAR (45) NOT NULL,
+  PRIMARY KEY(id)
+)
+ENGINE = InnoDB;
