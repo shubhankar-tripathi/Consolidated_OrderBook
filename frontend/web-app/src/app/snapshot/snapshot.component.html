@@ -1,0 +1,76 @@
+<div class="container">
+  <form [formGroup]="rForm" (ngSubmit)="addPost(rForm.value)">
+    <div class="form-group">
+      <div class="row columns">
+
+        <h1> <br/> </h1>
+
+        <label for="price">Price
+          <input type="number" class="form-control" formControlName="price">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['price'].valid && rForm.controls['price'].touched">{{ titleAlert }}</div>
+        <br>
+        <label>Exchange</label>
+        <select class="form-control" id="exchange" formControlName="exchange">
+          <option class="form-control" *ngFor="let c of exchangeList" [ngValue]="c">{{ c }}</option>
+        </select>
+        <br>
+        <input class="btn btn-default" type="submit" value="Submit Form" [disabled]="!rForm.valid">
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #forminfo>
+  <div class="form-container">
+    <div class="row columns">
+      <h1>{{ price }}</h1>
+
+      <p>{{ exchange }}</p>
+    </div>
+  </div>
+</ng-template>
+
+<div class="container"><table class="table table-bordered" style="float:left;">
+  <thead align="center">
+	<tr>
+		<th> Type </th>
+		<th> Price </th>
+		<th> Amount </th>
+		<th> Count </th>
+		<th> Exchange </th>
+	</tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let group of data[0]">
+    <td>{{group.type}}</td>
+    <td>{{group.price}}</td>
+    <td>{{group.amount}}</td>
+    <td>{{group.count}}</td>
+    <td>{{group.exchange}}</td>
+  </tr>
+  </tbody>
+</table>
+</div>
+<div class="container">
+  <table class="table table-bordered">
+  <thead>
+	<tr>
+		<th> Type </th>
+		<th> Price </th>
+		<th> Amount </th>
+		<th> Count </th>
+		<th> Exchange </th>
+	</tr>
+  </thead>
+    <tbody>
+    <tr *ngFor="let group of data[1]">
+      <td>{{group.type}}</td>
+      <td>{{group.price}}</td>
+      <td>{{group.amount}}</td>
+      <td>{{group.count}}</td>
+      <td>{{group.exchange}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

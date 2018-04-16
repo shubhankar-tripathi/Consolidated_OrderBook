@@ -82,13 +82,14 @@ class Client(object):
 
             print ("connected")
 
-            self.run(session,connection)
+            self.runBitfinex(session,connection)
+            self.runGDAX(session,connection)
 
 
 
     @gen.coroutine
 
-    def run(self,session,connection):
+    def runBitfinex(self,session,connection):
 
         while True:
             msgB = yield self.wsb.read_message()
@@ -106,30 +107,44 @@ class Client(object):
                             f[index].append("Bitfinex")
                             store.Main.run(session, f[index])
 
-                if len(msglist) == 4 and msglist[2] != 0:
+                if len(msglist) == 4:
                     f = msglist
                     if f[3] < 0:
-                        f.insert(1, "Ask")
+                        f[0] = "Ask"
                     else:
-                        f.insert(1, "Bid")
-                    f[index].append("Bitfinex")
-                    store.Main.run(session, f[1:5])
+                        f[0] = "Bid"
+                    f.append("Bitfinex")
+                    print(len(f))
+                    store.Main.run(session, f)
             #connection.close()
 
 
+            if msgB is None:
 
+                print ("Bitfinex connection closed")
+
+                self.wsb = None
+
+                break
+
+
+    @gen.coroutine
+
+    def runGDAX(self,session,connection):
+
+        while True:
             msgG = yield self.wsg.read_message()
             print("msgG:: " + msgG)
             msgdax = literal_eval(msgG)
             if msgdax["type"] == "snapshot":
                 blist = msgdax["bids"]
-                for index in range(1, len(blist)):
+                for index in range(1, 50):
                     blist[index].insert(1, 1)
                     blist[index].insert(0, "Bid")
                     blist[index].append("GDAX")
                     store.Main.run(session, blist[index])
                 alist = msgdax["asks"]
-                for index in range(1, len(alist)):
+                for index in range(1, 50):
                     alist[index].insert(1, 1)
                     alist[index].insert(0, "Ask")
                     alist[index].append("GDAX")
@@ -144,15 +159,6 @@ class Client(object):
                 mlist.append("GDAX")
                 store.Main.run(session, mlist)
 
-
-            if msgB is None:
-
-                print ("Bitfinex connection closed")
-
-                self.wsb = None
-
-                break
-
             if msgG is None:
 
                 print("Gdax connection closed")
@@ -160,8 +166,6 @@ class Client(object):
                 self.wsb = None
 
                 break
-
-
 
     def keep_alive(self):
 
